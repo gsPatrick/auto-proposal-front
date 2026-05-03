@@ -164,14 +164,19 @@ export default function WalletPage() {
             </div>
             <form onSubmit={handleDeposit}>
               <div className={walletStyles.formGroup}>
-                <label>Provedor de IA</label>
-                <select 
-                  className={walletStyles.modalSelect}
-                  value={depositProvider}
-                  onChange={(e) => setDepositProvider(e.target.value)}
-                >
-                  {providers.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
-                </select>
+                <label>Selecione o Provedor</label>
+                <div className={walletStyles.providerGrid}>
+                  {providers.map(p => (
+                    <div 
+                      key={p.id} 
+                      className={`${walletStyles.providerOption} ${depositProvider === p.id ? walletStyles.providerActive : ''}`}
+                      onClick={() => setDepositProvider(p.id)}
+                    >
+                      <img src={p.img} alt={p.label} />
+                      <span>{p.label}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className={walletStyles.formGroup}>
                 <label>Valor (USD)</label>
