@@ -35,6 +35,11 @@ export default function Sidebar({ collapsed, onToggle }) {
     return () => clearInterval(interval);
   }, []);
 
+  // Atualiza a largura da sidebar no root para que o conteúdo principal se ajuste
+  React.useEffect(() => {
+    document.documentElement.style.setProperty('--sidebar-width', collapsed ? '80px' : '260px');
+  }, [collapsed]);
+
   const handleLogout = () => {
     setLoggingOut(true);
     

@@ -26,6 +26,18 @@
   display: none;
 }
 
+.sidebarCollapsed .footer {
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.sidebarCollapsed .userContainer {
+  justify-content: center;
+  flex: none;
+}
+
 .sidebarCollapsed .navLink {
   justify-content: center;
   padding: 12px;
