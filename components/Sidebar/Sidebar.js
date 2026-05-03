@@ -1,3 +1,5 @@
+import React from 'react';
+import styles from './Sidebar.module.css';
 import { LayoutDashboard, FileText, Settings, BarChart3, LogOut, Cpu, ChevronLeft, ChevronRight, User as UserIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
