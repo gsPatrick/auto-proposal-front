@@ -49,7 +49,7 @@ export default function Dashboard() {
     { name: 'OpenAI', status: 'Ativo', img: '/images/ai/openai.png' },
     { name: 'Anthropic', status: 'Standby', img: '/images/ai/claude.png' },
     { name: 'Google', status: 'Ativo', img: '/images/ai/gemini.png' },
-    { name: 'Groq', status: 'Ativo', icon: '⚡' },
+    { name: 'Groq', status: 'Ativo', img: '/images/ai/groq.png' },
   ];
 
   return (
