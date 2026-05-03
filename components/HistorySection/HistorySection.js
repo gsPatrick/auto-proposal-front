@@ -32,10 +32,10 @@ export default function HistorySection({ logs, loading }) {
 
   const getUserPhoto = (log) => {
     const photos = {
-      'patrick@gmail.com': '/images/patrick.png',
-      'beatrizmello@gmail.com': '/images/beatriz.png',
+      'Patrick Siqueira': '/images/patrick.png',
+      'Beatriz Nascimento': '/images/beatriz.png',
     };
-    return photos[log.userEmail] || null;
+    return photos[log.userName] || null;
   };
 
   if (loading) {
