@@ -132,7 +132,10 @@ export default function WalletPage() {
                       </td>
                       <td className={walletStyles.providerCell} data-label="Provedor">
                         <img src={`/images/ai/${tx.provider === 'google' ? 'gemini' : tx.provider === 'claude' ? 'claude' : tx.provider === 'openai' ? 'openai' : 'groq'}.png`} alt={tx.provider} />
-                        {tx.provider?.toUpperCase()}
+                        <div>
+                          <div style={{ fontWeight: 700 }}>{tx.provider?.toUpperCase()}</div>
+                          {tx.model && <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>{tx.model}</div>}
+                        </div>
                       </td>
                       <td data-label="Tipo">
                         <span className={`${walletStyles.typeBadge} ${tx.type === 'deposit' ? walletStyles.typeDeposit : walletStyles.typeUsage}`}>

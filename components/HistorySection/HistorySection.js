@@ -66,8 +66,8 @@ export default function HistorySection({ logs, loading }) {
               <div className={styles.iaCell}>
                 <div className={styles.aiIcon}>{getAIIcon(log.provider)}</div>
                 <div>
-                  <span className={styles.label}>Provider</span>
-                  <span className={styles.value}>{log.provider?.toUpperCase()}</span>
+                  <span className={styles.label}>{log.provider?.toUpperCase()}</span>
+                  <span className={styles.value} style={{ fontSize: '0.8rem', opacity: 0.9 }}>{log.model}</span>
                 </div>
               </div>
 
