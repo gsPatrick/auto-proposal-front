@@ -30,6 +30,14 @@ export default function HistorySection({ logs, loading }) {
     return '💼';
   };
 
+  const getUserPhoto = (log) => {
+    const photos = {
+      'patrick@gmail.com': '/images/patrick.png',
+      'beatrizmello@gmail.com': '/images/beatriz.png',
+    };
+    return photos[log.userEmail] || null;
+  };
+
   if (loading) {
     return (
       <div className={styles.section}>
@@ -65,9 +73,14 @@ export default function HistorySection({ logs, loading }) {
 
               <div style={{ minWidth: '120px' }}>
                 <span className={styles.label}>Remetente</span>
-                <span className={styles.value} style={{ color: 'var(--primary)', fontWeight: 600 }}>
-                  {log.userName || 'Sistema'}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
+                  {getUserPhoto(log) && (
+                    <img src={getUserPhoto(log)} alt="" style={{ width: '22px', height: '22px', borderRadius: '6px', objectFit: 'cover' }} />
+                  )}
+                  <span className={styles.value} style={{ color: 'var(--primary)', fontWeight: 600 }}>
+                    {log.userName || 'Sistema'}
+                  </span>
+                </div>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
