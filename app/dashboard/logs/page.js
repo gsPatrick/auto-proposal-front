@@ -4,22 +4,21 @@ import React, { useState, useEffect } from 'react';
 import styles from '../page.module.css';
 import Sidebar from '../../../components/Sidebar/Sidebar';
 import HistorySection from '../../../components/HistorySection/HistorySection';
+import FilterBar from '../../../components/FilterBar/FilterBar';
 import { api } from '../../../lib/api';
 import { RefreshCw } from 'lucide-react';
 
 export default function LogsPage() {
   const [timeRange, setTimeRange] = useState('month');
+  const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
   const [logs, setLogs] = useState([]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  const fetchLogs = async (range) => {
+  const fetchLogs = async (range, currentFilters = {}) => {
     setLoading(true);
     try {
-      // No backend o getLogs ainda não filtra por range, mas vamos passar o parâmetro 
-      // para futuras melhorias se necessário, ou filtrar no front se for o caso.
-      // Por enquanto vamos focar na integração real.
-      const data = await api.getLogs();
+      const data = await api.getLogs(range, currentFilters);
       setLogs(data || []);
     } catch (err) {
       console.error(err);
@@ -29,8 +28,12 @@ export default function LogsPage() {
   };
 
   useEffect(() => {
-    fetchLogs(timeRange);
-  }, [timeRange]);
+    fetchLogs(timeRange, filters);
+  }, [timeRange, filters]);
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
 
   return (
     <main className={styles.main} style={{ paddingLeft: isSidebarCollapsed ? '80px' : '260px' }}>
@@ -55,11 +58,13 @@ export default function LogsPage() {
                 </button>
               ))}
             </div>
-            <button className={styles.timeBtn} onClick={() => fetchLogs(timeRange)}>
+            <button className={styles.timeBtn} onClick={() => fetchLogs(timeRange, filters)}>
               <RefreshCw size={16} className={loading ? 'ap-spin' : ''} />
             </button>
           </div>
         </header>
+
+        <FilterBar onFilterChange={handleFilterChange} />
 
         <div className={styles.fullWidthSection}>
           <HistorySection logs={logs} loading={loading} />

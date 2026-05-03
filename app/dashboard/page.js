@@ -16,21 +16,22 @@ import {
   Sparkles,
   RefreshCw
 } from 'lucide-react';
+import FilterBar from '../../components/FilterBar/FilterBar';
 
 export default function Dashboard() {
   const [timeRange, setTimeRange] = useState('week');
+  const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
   const [metrics, setMetrics] = useState(null);
   const [logs, setLogs] = useState([]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  const fetchData = async (range) => {
+  const fetchData = async (range, currentFilters = {}) => {
     setLoading(true);
     try {
-      // Pequeno delay para garantir que o skeleton apareça (opcional)
       const [metricsData, logsData] = await Promise.all([
-        api.getMetrics(range),
-        api.getLogs()
+        api.getMetrics(range, currentFilters),
+        api.getLogs('all', currentFilters)
       ]);
       setMetrics(metricsData);
       setLogs(logsData || []);
@@ -42,8 +43,12 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    fetchData(timeRange);
-  }, [timeRange]);
+    fetchData(timeRange, filters);
+  }, [timeRange, filters]);
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
 
   const aiModels = [
     { name: 'OpenAI', status: 'Ativo', img: '/images/ai/openai.png' },
@@ -75,11 +80,13 @@ export default function Dashboard() {
                 </button>
               ))}
             </div>
-            <button className={styles.timeBtn} onClick={() => fetchData(timeRange)}>
+            <button className={styles.timeBtn} onClick={() => fetchData(timeRange, filters)}>
               <RefreshCw size={16} className={loading ? 'ap-spin' : ''} />
             </button>
           </div>
         </header>
+
+        <FilterBar onFilterChange={handleFilterChange} />
 
         <section className={styles.statsGrid}>
           {loading ? (

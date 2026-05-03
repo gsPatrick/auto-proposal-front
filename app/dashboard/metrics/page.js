@@ -6,19 +6,21 @@ import Sidebar from '../../../components/Sidebar/Sidebar';
 import ChartSection from '../../../components/ChartSection/ChartSection';
 import StatsCard from '../../../components/StatsCard/StatsCard';
 import Skeleton from '../../../components/Skeleton/Skeleton';
+import FilterBar from '../../../components/FilterBar/FilterBar';
 import { api } from '../../../lib/api';
 import { DollarSign, Zap, TrendingUp, RefreshCw } from 'lucide-react';
 
 export default function MetricsPage() {
   const [timeRange, setTimeRange] = useState('month');
+  const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
   const [metrics, setMetrics] = useState(null);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  const fetchMetrics = async (range) => {
+  const fetchMetrics = async (range, currentFilters = {}) => {
     setLoading(true);
     try {
-      const data = await api.getMetrics(range);
+      const data = await api.getMetrics(range, currentFilters);
       setMetrics(data);
     } catch (err) {
       console.error(err);
@@ -28,8 +30,12 @@ export default function MetricsPage() {
   };
 
   useEffect(() => {
-    fetchMetrics(timeRange);
-  }, [timeRange]);
+    fetchMetrics(timeRange, filters);
+  }, [timeRange, filters]);
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
 
   return (
     <main className={styles.main} style={{ paddingLeft: isSidebarCollapsed ? '80px' : '260px' }}>
@@ -54,11 +60,13 @@ export default function MetricsPage() {
                 </button>
               ))}
             </div>
-            <button className={styles.timeBtn} onClick={() => fetchMetrics(timeRange)}>
+            <button className={styles.timeBtn} onClick={() => fetchMetrics(timeRange, filters)}>
               <RefreshCw size={16} className={loading ? 'ap-spin' : ''} />
             </button>
           </div>
         </header>
+
+        <FilterBar onFilterChange={handleFilterChange} />
 
         <section className={styles.statsGrid}>
           {loading ? (
