@@ -9,6 +9,7 @@ export default function HistorySection({ logs, loading }) {
       openai: '/images/ai/openai.png',
       claude: '/images/ai/claude.png',
       gemini: '/images/ai/gemini.png',
+      groq: '/images/ai/groq.png',
     };
 
     if (images[p]) {
@@ -19,10 +20,14 @@ export default function HistorySection({ logs, loading }) {
       );
     }
 
-    switch(p) {
-      case 'groq': return '⚡';
-      default: return '🧠';
+    return '🧠';
+  };
+
+  const getPlatformIcon = (platform) => {
+    if (platform?.toLowerCase() === '99freelas') {
+      return <img src="/images/99freelas.png" alt="99Freelas" style={{ width: '20px', height: '20px', objectFit: 'contain', borderRadius: '4px' }} />;
     }
+    return '💼';
   };
 
   if (loading) {
@@ -58,19 +63,24 @@ export default function HistorySection({ logs, loading }) {
                 </div>
               </div>
 
-              <div>
-                <span className={styles.label}>Modelo</span>
-                <span className={styles.value}>{log.model}</span>
+              <div style={{ minWidth: '120px' }}>
+                <span className={styles.label}>Remetente</span>
+                <span className={styles.value} style={{ color: 'var(--primary)', fontWeight: 600 }}>
+                  {log.userName || 'Sistema'}
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <span className={styles.label}>Plataforma</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  {getPlatformIcon(log.platform)}
+                  <span className={styles.value} style={{ fontSize: '0.75rem' }}>{log.platform}</span>
+                </div>
               </div>
 
               <div className={styles.hideMobile}>
-                <span className={styles.label}>Input</span>
-                <span className={styles.value}>{log.tokensInput?.toLocaleString()} tkn</span>
-              </div>
-
-              <div className={styles.hideMobile}>
-                <span className={styles.label}>Output</span>
-                <span className={styles.value}>{log.tokensOutput?.toLocaleString()} tkn</span>
+                <span className={styles.label}>Tokens</span>
+                <span className={styles.value}>{( (log.tokensInput || 0) + (log.tokensOutput || 0) ).toLocaleString()}</span>
               </div>
 
               <div>
