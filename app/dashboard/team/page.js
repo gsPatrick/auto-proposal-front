@@ -14,6 +14,9 @@ const userPhotos = {
 const platformLogos = {
   '99freelas': '/images/99freelas.png',
   '99Freelas': '/images/99freelas.png',
+  'workana': '/images/workana.png',
+  'Workana': '/images/workana.png',
+  'freelancer': '/images/freelancer.png',
 };
 
 const aiLogos = {

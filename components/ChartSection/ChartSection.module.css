@@ -26,23 +26,41 @@
 }
 
 .tooltip {
-  background: #18181b;
+  background: rgba(24, 24, 27, 0.95);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--card-border);
-  padding: 12px;
-  border-radius: 8px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
 }
 
 .tooltipLabel {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--muted-foreground);
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 4px;
 }
 
-.tooltipValue {
-  font-size: 1rem;
-  font-weight: 700;
-  color: white;
+.tooltipList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tooltipItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
 
 @media (max-width: 768px) {
