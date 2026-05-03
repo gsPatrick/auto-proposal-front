@@ -68,8 +68,9 @@ export default function FilterBar({ onFilterChange }) {
           onChange={(e) => handleChange('platform', e.target.value)}
         >
           <option value="">Todas Plataformas</option>
-          <option value="99Freelas">99Freelas</option>
-          <option value="Freelancer">Freelancer.com</option>
+          <option value="99freelas">99Freelas</option>
+          <option value="workana">Workana</option>
+          <option value="freelancer">Freelancer.com</option>
         </select>
 
         <select 

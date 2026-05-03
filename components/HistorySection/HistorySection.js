@@ -24,8 +24,15 @@ export default function HistorySection({ logs, loading }) {
   };
 
   const getPlatformIcon = (platform) => {
-    if (platform?.toLowerCase() === '99freelas') {
+    const p = platform?.toLowerCase();
+    if (p === '99freelas') {
       return <img src="/images/99freelas.png" alt="99Freelas" style={{ width: '20px', height: '20px', objectFit: 'contain', borderRadius: '4px' }} />;
+    }
+    if (p === 'workana') {
+      return <img src="/workana.png" alt="Workana" style={{ width: '20px', height: '20px', objectFit: 'contain', borderRadius: '4px' }} />;
+    }
+    if (p === 'freelancer') {
+      return <img src="/images/freelancer.png" alt="Freelancer" style={{ width: '20px', height: '20px', objectFit: 'contain', borderRadius: '4px' }} />;
     }
     return '💼';
   };
