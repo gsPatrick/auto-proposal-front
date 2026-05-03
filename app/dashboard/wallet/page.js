@@ -66,7 +66,7 @@ export default function WalletPage() {
   ];
 
   return (
-    <main className={styles.main} style={{ paddingLeft: isSidebarCollapsed ? '80px' : '260px' }}>
+    <main className={styles.main} style={{ paddingLeft: 'var(--sidebar-width, 260px)' }}>
       <Sidebar collapsed={isSidebarCollapsed} onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)} />
       
       <div className={styles.content}>
@@ -124,28 +124,28 @@ export default function WalletPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {history.map((tx) => (
+                    {history.map((tx) => (
                     <tr key={tx.id}>
-                      <td className={walletStyles.dateCell}>
+                      <td className={walletStyles.dateCell} data-label="Data/Hora">
                         <Clock size={14} />
                         {new Date(tx.createdAt).toLocaleString('pt-BR')}
                       </td>
-                      <td className={walletStyles.providerCell}>
+                      <td className={walletStyles.providerCell} data-label="Provedor">
                         <img src={`/images/ai/${tx.provider === 'google' ? 'gemini' : tx.provider === 'claude' ? 'claude' : tx.provider === 'openai' ? 'openai' : 'groq'}.png`} alt={tx.provider} />
                         {tx.provider?.toUpperCase()}
                       </td>
-                      <td>
+                      <td data-label="Tipo">
                         <span className={`${walletStyles.typeBadge} ${tx.type === 'deposit' ? walletStyles.typeDeposit : walletStyles.typeUsage}`}>
                           {tx.type === 'deposit' ? <ArrowUpRight size={12} /> : <ArrowDownLeft size={12} />}
                           {tx.type === 'deposit' ? 'Depósito' : 'Consumo'}
                         </span>
                       </td>
-                      <td className={tx.type === 'deposit' ? walletStyles.amountPositive : walletStyles.amountNegative}>
+                      <td data-label="Valor" className={tx.type === 'deposit' ? walletStyles.amountPositive : walletStyles.amountNegative}>
                         {tx.type === 'deposit' ? '+' : '-'} ${parseFloat(tx.amount).toFixed(4)}
                       </td>
-                      <td>$ {parseFloat(tx.previousBalance).toFixed(4)}</td>
-                      <td className={walletStyles.bold}>$ {parseFloat(tx.newBalance).toFixed(4)}</td>
-                      <td className={walletStyles.descCell}>{tx.description}</td>
+                      <td data-label="Saldo Anterior">$ {parseFloat(tx.previousBalance).toFixed(4)}</td>
+                      <td data-label="Novo Saldo" className={walletStyles.bold}>$ {parseFloat(tx.newBalance).toFixed(4)}</td>
+                      <td data-label="Descrição" className={walletStyles.descCell}>{tx.description}</td>
                     </tr>
                   ))}
                 </tbody>

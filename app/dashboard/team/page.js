@@ -94,7 +94,7 @@ export default function TeamPage() {
   };
 
   return (
-    <main className={styles.main} style={{ paddingLeft: collapsed ? '80px' : '260px' }}>
+    <main className={styles.main} style={{ paddingLeft: 'var(--sidebar-width, 260px)' }}>
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
       <div className={styles.content}>
         <div className={styles.header}>

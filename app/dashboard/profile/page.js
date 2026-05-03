@@ -42,7 +42,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <main className={styles.main} style={{ paddingLeft: isSidebarCollapsed ? '80px' : '260px' }}>
+    <main className={styles.main} style={{ paddingLeft: 'var(--sidebar-width, 260px)' }}>
       <Sidebar collapsed={isSidebarCollapsed} onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)} />
       
       <div className={styles.content}>
@@ -53,7 +53,12 @@ export default function ProfilePage() {
           </div>
         </header>
 
-        <div className={styles.topGrid} style={{ gridTemplateColumns: '300px 1fr', gap: '32px' }}>
+        <div className={styles.topGrid} style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+          gap: '32px',
+          alignItems: 'start'
+        }}>
           {/* Card Esquerdo: Avatar & Resumo */}
           <div style={{ 
             background: 'var(--card)', 
@@ -117,7 +122,11 @@ export default function ProfilePage() {
             border: '1px solid var(--card-border)',
             backdropFilter: 'blur(12px)'
           }}>
-            <form onSubmit={handleUpdate} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
+            <form onSubmit={handleUpdate} style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', 
+              gap: '32px' 
+            }}>
               <div style={{ gridColumn: '1 / -1', borderBottom: '1px solid var(--card-border)', paddingBottom: '16px', marginBottom: '8px' }}>
                 <h3 style={{ fontSize: '1.1rem', color: 'white' }}>Informações Básicas</h3>
               </div>
@@ -171,12 +180,13 @@ export default function ProfilePage() {
                   type="submit" 
                   disabled={loading}
                   style={{ 
-                    width: 'fit-content',
+                    width: '100%',
+                    maxWidth: '300px',
                     padding: '16px 40px', 
                     background: 'var(--primary)', 
                     border: 'none', 
                     borderRadius: '12px', 
-                    color: 'white', 
+                    color: '#000', 
                     fontWeight: 700, 
                     cursor: 'pointer',
                     display: 'flex',

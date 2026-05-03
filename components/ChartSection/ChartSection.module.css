@@ -44,3 +44,21 @@
   font-weight: 700;
   color: white;
 }
+
+@media (max-width: 768px) {
+  .section {
+    padding: 20px;
+  }
+  .chartContainer {
+    height: 250px;
+  }
+  .header {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.1rem;
+  }
+}

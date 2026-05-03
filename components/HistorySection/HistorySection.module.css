@@ -93,9 +93,45 @@
 }
 
 @media (max-width: 1024px) {
+  .section {
+    padding: 20px;
+  }
+  .header {
+    margin-bottom: 20px;
+  }
   .item {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
+    padding: 20px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  .iaCell {
+    grid-column: span 2;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 12px;
+    margin-bottom: 4px;
   }
   .hideMobile { display: none; }
+}
+
+@media (max-width: 480px) {
+  .item {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .iaCell {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .item > div:not(.iaCell) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    padding: 8px 0;
+  }
+  .item > div:last-child {
+    border-bottom: none;
+  }
 }

@@ -75,7 +75,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <main className={styles.main} style={{ paddingLeft: isSidebarCollapsed ? '80px' : '260px' }}>
+    <main className={styles.main} style={{ paddingLeft: 'var(--sidebar-width, 260px)' }}>
       <Sidebar collapsed={isSidebarCollapsed} onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)} />
       
       <div className={styles.content}>
