@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Sidebar.module.css';
 import { LayoutDashboard, FileText, Settings, BarChart3, LogOut, Cpu, ChevronLeft, ChevronRight, User as UserIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -7,6 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 export default function Sidebar({ collapsed, onToggle }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -16,15 +17,28 @@ export default function Sidebar({ collapsed, onToggle }) {
   ];
 
   const handleLogout = () => {
-    // Adiciona classe de animação de saída no body (opcional para efeito global)
-    document.body.classList.add('ap-fade-out');
+    setLoggingOut(true);
     
     setTimeout(() => {
       localStorage.removeItem('user');
       router.push('/login');
-      document.body.classList.remove('ap-fade-out');
-    }, 500);
+    }, 1200);
   };
+
+  if (loggingOut) {
+    return (
+      <div style={{ 
+        position: 'fixed', inset: 0, background: '#000', zIndex: 9999, 
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        animation: 'fadeIn 0.5s ease-out'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <h2 style={{ color: 'white', fontFamily: 'Outfit', fontSize: '2.5rem', marginBottom: '10px' }}>Saindo...</h2>
+          <p style={{ color: '#71717a' }}>Encerrando sua sessão com segurança.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <aside className={`${styles.sidebar} ${collapsed ? styles.sidebarCollapsed : ''}`}>

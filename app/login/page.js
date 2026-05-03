@@ -11,6 +11,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
   const handleLogin = async (e) => {
@@ -29,16 +30,32 @@ export default function LoginPage() {
 
       if (data.success) {
         localStorage.setItem('user', JSON.stringify(data.user));
-        router.push('/dashboard');
+        setSuccess(true);
+        // Delay para a animação cinematográfica
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 1500);
       } else {
         setError(data.error || 'Credenciais inválidas');
       }
     } catch (err) {
       setError('Erro ao conectar com o servidor');
     } finally {
-      setLoading(false);
+      if (!success) setLoading(false);
     }
   };
+
+  if (success) {
+    return (
+      <div className={styles.transitionOverlay}>
+        <div className={styles.transitionContent}>
+          <div className={styles.loaderLine}></div>
+          <h2 className={styles.transitionTitle}>Bem-vindo, {email.split('@')[0]}</h2>
+          <p className={styles.transitionSubtitle}>Preparando seu centro de comando...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
