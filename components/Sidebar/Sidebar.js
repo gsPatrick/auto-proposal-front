@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Sidebar.module.css';
-import { LayoutDashboard, FileText, Settings, BarChart3, LogOut, Cpu, ChevronLeft, ChevronRight, User as UserIcon, Wallet } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, BarChart3, LogOut, Cpu, ChevronLeft, ChevronRight, User as UserIcon, Wallet, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { api } from '../../lib/api';
@@ -14,6 +14,7 @@ export default function Sidebar({ collapsed, onToggle }) {
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/dashboard/wallet', label: 'Carteira', icon: Wallet },
+    { href: '/dashboard/team', label: 'Equipe', icon: Users },
     { href: '/dashboard/metrics', label: 'Métricas', icon: BarChart3 },
     { href: '/dashboard/logs', label: 'Logs', icon: FileText },
     { href: '/dashboard/profile', label: 'Perfil', icon: UserIcon },
@@ -92,49 +93,46 @@ export default function Sidebar({ collapsed, onToggle }) {
         })}
       </nav>
       
-      <div className={styles.balanceSwitcher} onClick={() => router.push('/dashboard/wallet')}>
-        {!collapsed && (
-          <div className={styles.switcherHeader}>
-            <span>Carteira (USD)</span>
-            <select 
-              className={styles.miniSelect}
-              value={activeProvider}
-              onChange={(e) => {
-                e.stopPropagation();
-                setActiveProvider(e.target.value);
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {providers.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
-            </select>
-          </div>
-        )}
-        
-        <div className={styles.switcherMain}>
-          <div className={styles.activeIcon}>
-            <img src={providers.find(p => p.id === activeProvider)?.img} alt="AI" />
-          </div>
-          {!collapsed ? (
-            <div className={styles.activeDetails}>
-              <span className={styles.activeLabel}>{providers.find(p => p.id === activeProvider)?.label}</span>
-              <span className={styles.activeValue}>$ {(balances[activeProvider] || 0).toFixed(2)}</span>
+      {!collapsed && (
+        <>
+          <div className={styles.balanceSwitcher} onClick={() => router.push('/dashboard/wallet')}>
+            <div className={styles.switcherHeader}>
+              <span>Carteira (USD)</span>
+              <select 
+                className={styles.miniSelect}
+                value={activeProvider}
+                onChange={(e) => {
+                  e.stopPropagation();
+                  setActiveProvider(e.target.value);
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {providers.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
+              </select>
             </div>
-          ) : (
-             <span className={styles.activeValueMini}>$ {(balances[activeProvider] || 0).toFixed(1)}</span>
-          )}
-        </div>
-      </div>
+            <div className={styles.switcherMain}>
+              <div className={styles.activeIcon}>
+                <img src={providers.find(p => p.id === activeProvider)?.img} alt="AI" />
+              </div>
+              <div className={styles.activeDetails}>
+                <span className={styles.activeLabel}>{providers.find(p => p.id === activeProvider)?.label}</span>
+                <span className={styles.activeValue}>$ {(balances[activeProvider] || 0).toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
 
-      <div className={styles.extensionBox}>
-        <div className={styles.extensionHeader}>
-          <span className={styles.extensionTitle}>Extensão v1.0.0</span>
-          <span className={styles.versionBadge}>Chrome</span>
-        </div>
-        <a href="/auto-proposal-extension.zip" download className={styles.downloadLink}>
-          <LogOut size={16} style={{ transform: 'rotate(90deg)' }} />
-          Baixar
-        </a>
-      </div>
+          <div className={styles.extensionBox}>
+            <div className={styles.extensionHeader}>
+              <span className={styles.extensionTitle}>Extensão v1.0.0</span>
+              <span className={styles.versionBadge}>Chrome</span>
+            </div>
+            <a href="/auto-proposal-extension.zip" download className={styles.downloadLink}>
+              <LogOut size={16} style={{ transform: 'rotate(90deg)' }} />
+              Baixar
+            </a>
+          </div>
+        </>
+      )}
 
       <div className={styles.footer}>
         <div className={styles.userContainer}>
