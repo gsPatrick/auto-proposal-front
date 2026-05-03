@@ -4,10 +4,22 @@ import Skeleton from '../Skeleton/Skeleton';
 
 export default function HistorySection({ logs, loading }) {
   const getAIIcon = (provider) => {
-    switch(provider?.toLowerCase()) {
-      case 'openai': return '🤖';
-      case 'claude': return '🟣';
-      case 'gemini': return '🔑';
+    const p = provider?.toLowerCase();
+    const images = {
+      openai: '/images/ai/openai.png',
+      claude: '/images/ai/claude.png',
+      gemini: '/images/ai/gemini.png',
+    };
+
+    if (images[p]) {
+      return (
+        <div style={{ backgroundColor: '#000', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '8px', padding: '4px' }}>
+          <img src={images[p]} alt={provider} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+        </div>
+      );
+    }
+
+    switch(p) {
       case 'groq': return '⚡';
       default: return '🧠';
     }

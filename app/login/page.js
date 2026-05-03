@@ -2,81 +2,108 @@
 
 import React, { useState } from 'react';
 import styles from './page.module.css';
+import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Lock, Mail, ArrowRight } from 'lucide-react';
+import { api } from '../../lib/api';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Simulação de login - Em produção, conectaria à sua API
-    router.push('/');
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('https://geral-auto-proposal-api.r954jc.easypanel.host/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+        router.push('/dashboard');
+      } else {
+        setError(data.error || 'Credenciais inválidas');
+      }
+    } catch (err) {
+      setError('Erro ao conectar com o servidor');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.visualSide}>
-        <h1 className={styles.logo}>Auto-Proposal</h1>
-        <p className={styles.tagline}>
-          Gerencie suas propostas com inteligência artificial de última geração e métricas em tempo real.
-        </p>
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          className={styles.bgVideo}
+        >
+          <source src="/videos/login_bg.mp4" type="video/mp4" />
+        </video>
+        <div className={styles.overlay}></div>
+        
+        <div className={styles.visualContent}>
+          <h1 className={styles.heroTitle}>Auto-Proposal <span className={styles.glowText}>AI</span></h1>
+          <p className={styles.heroSubtitle}>A próxima geração de propostas estratégicas impulsionadas por inteligência artificial.</p>
+        </div>
       </div>
-      
+
       <div className={styles.formSide}>
-        <div className={styles.formContainer}>
-          <h2 className={styles.title}>Bem-vindo</h2>
-          <p className={styles.subtitle}>Entre com suas credenciais para acessar o painel BI.</p>
-          
-          <form onSubmit={handleLogin}>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>Email</label>
-              <div style={{ position: 'relative' }}>
-                <Mail 
-                  size={18} 
-                  style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted-foreground)' }} 
-                />
+        <div className={styles.formWrapper}>
+          <div className={styles.header}>
+            <h2>Bem-vindo de volta</h2>
+            <p>Entre com suas credenciais para acessar o painel administrativo.</p>
+          </div>
+
+          <form className={styles.form} onSubmit={handleLogin}>
+            <div className={styles.inputGroup}>
+              <label>E-mail</label>
+              <div className={styles.inputWrapper}>
+                <Mail className={styles.icon} size={18} />
                 <input 
                   type="email" 
-                  className={styles.input} 
-                  style={{ paddingLeft: '48px' }}
-                  placeholder="seu@email.com"
+                  placeholder="seu@email.com" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
             </div>
-            
-            <div className={styles.formGroup}>
-              <label className={styles.label}>Senha</label>
-              <div style={{ position: 'relative' }}>
-                <Lock 
-                  size={18} 
-                  style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted-foreground)' }} 
-                />
+
+            <div className={styles.inputGroup}>
+              <label>Senha</label>
+              <div className={styles.inputWrapper}>
+                <Lock className={styles.icon} size={18} />
                 <input 
                   type="password" 
-                  className={styles.input} 
-                  style={{ paddingLeft: '48px' }}
-                  placeholder="••••••••"
+                  placeholder="••••••••" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </div>
             </div>
-            
-            <button type="submit" className={styles.submitBtn}>
-              Acessar Painel <ArrowRight size={18} />
+
+            {error && <div className={styles.errorMsg}>{error}</div>}
+
+            <button className={styles.submitBtn} disabled={loading}>
+              {loading ? <Loader2 className="ap-spin" size={20} /> : (
+                <>Acessar Painel <ArrowRight size={20} /></>
+              )}
             </button>
           </form>
-          
-          <p className={styles.footerText}>
-            Não tem uma conta? <a href="#" className={styles.link}>Entre em contato</a>
-          </p>
         </div>
       </div>
     </div>
