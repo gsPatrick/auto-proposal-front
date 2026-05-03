@@ -26,6 +26,8 @@ export default function Dashboard() {
   const [balances, setBalances] = useState({});
   const [logs, setLogs] = useState([]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [lowBalanceAlert, setLowBalanceAlert] = useState(null); // { id, name, img, balance }
+  const [shownAlerts, setShownAlerts] = useState(new Set());
 
   const fetchData = async (range, currentFilters = {}) => {
     setLoading(true);
@@ -38,6 +40,18 @@ export default function Dashboard() {
       setMetrics(metricsData);
       setLogs(logsData || []);
       setBalances(balanceData);
+
+      // Checa saldos baixos (Abaixo de $1.00 e acima de $0)
+      Object.entries(balanceData).forEach(([id, val]) => {
+        if (val <= 1.00 && val > 0 && !shownAlerts.has(id)) {
+          const model = aiModels.find(m => m.id === id);
+          if (model) {
+            setLowBalanceAlert({ ...model, balance: val });
+            setShownAlerts(prev => new Set(prev).add(id));
+          }
+        }
+      });
+
     } catch (err) {
       console.error('Erro ao carregar dados:', err);
     } finally {
@@ -180,6 +194,43 @@ export default function Dashboard() {
           <HistorySection logs={logs} loading={loading} />
         </div>
       </div>
+      {/* MODAL DE SALDO BAIXO */}
+      {lowBalanceAlert && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.alertModal}>
+            <div className={styles.alertHeader}>
+              <div className={styles.alertIconBg}>
+                <img src={lowBalanceAlert.img} alt={lowBalanceAlert.name} />
+              </div>
+              <div className={styles.alertTitle}>
+                <h3>Saldo Crítico: {lowBalanceAlert.name}</h3>
+                <p>Seus créditos estão quase acabando!</p>
+              </div>
+              <button className={styles.closeAlert} onClick={() => setLowBalanceAlert(null)}>×</button>
+            </div>
+            
+            <div className={styles.alertBody}>
+              <div className={styles.balanceStatus}>
+                <span className={styles.statusLabel}>Saldo Restante</span>
+                <span className={styles.statusValue}>$ {lowBalanceAlert.balance.toFixed(4)}</span>
+              </div>
+              <p className={styles.alertMessage}>
+                O modelo <strong>{lowBalanceAlert.name}</strong> deixará de funcionar em breve se não houver uma recarga.
+              </p>
+            </div>
+
+            <div className={styles.alertFooter}>
+              <button className={styles.cancelBtn} onClick={() => setLowBalanceAlert(null)}>Depois</button>
+              <button className={styles.rechargeBtn} onClick={() => {
+                setLowBalanceAlert(null);
+                router.push('/dashboard/wallet');
+              }}>
+                Recarregar Agora
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
