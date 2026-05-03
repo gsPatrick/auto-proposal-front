@@ -1,20 +1,38 @@
 import React, { useState } from 'react';
 import styles from './Sidebar.module.css';
-import { LayoutDashboard, FileText, Settings, BarChart3, LogOut, Cpu, ChevronLeft, ChevronRight, User as UserIcon } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, BarChart3, LogOut, Cpu, ChevronLeft, ChevronRight, User as UserIcon, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { api } from '../../lib/api';
 
 export default function Sidebar({ collapsed, onToggle }) {
   const pathname = usePathname();
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
+  const [balances, setBalances] = useState({});
 
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/dashboard/wallet', label: 'Carteira', icon: Wallet },
     { href: '/dashboard/metrics', label: 'Métricas', icon: BarChart3 },
     { href: '/dashboard/logs', label: 'Logs', icon: FileText },
     { href: '/dashboard/profile', label: 'Perfil', icon: UserIcon },
   ];
+
+  const fetchBalances = async () => {
+    try {
+      const data = await api.getBalance();
+      setBalances(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchBalances();
+    const interval = setInterval(fetchBalances, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = () => {
     setLoggingOut(true);
@@ -40,6 +58,15 @@ export default function Sidebar({ collapsed, onToggle }) {
     );
   }
 
+  const [activeProvider, setActiveProvider] = useState('openai');
+
+  const providers = [
+    { id: 'openai', label: 'OpenAI', img: '/images/ai/openai.png' },
+    { id: 'claude', label: 'Claude', img: '/images/ai/claude.png' },
+    { id: 'google', label: 'Google', img: '/images/ai/gemini.png' },
+    { id: 'groq', label: 'Groq', img: '/images/ai/groq.png' }
+  ];
+
   return (
     <aside className={`${styles.sidebar} ${collapsed ? styles.sidebarCollapsed : ''}`}>
       <button className={styles.toggleBtn} onClick={onToggle}>
@@ -64,6 +91,39 @@ export default function Sidebar({ collapsed, onToggle }) {
           );
         })}
       </nav>
+      
+      <div className={styles.balanceSwitcher} onClick={() => router.push('/dashboard/wallet')}>
+        {!collapsed && (
+          <div className={styles.switcherHeader}>
+            <span>Carteira (USD)</span>
+            <select 
+              className={styles.miniSelect}
+              value={activeProvider}
+              onChange={(e) => {
+                e.stopPropagation();
+                setActiveProvider(e.target.value);
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {providers.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
+            </select>
+          </div>
+        )}
+        
+        <div className={styles.switcherMain}>
+          <div className={styles.activeIcon}>
+            <img src={providers.find(p => p.id === activeProvider)?.img} alt="AI" />
+          </div>
+          {!collapsed ? (
+            <div className={styles.activeDetails}>
+              <span className={styles.activeLabel}>{providers.find(p => p.id === activeProvider)?.label}</span>
+              <span className={styles.activeValue}>$ {(balances[activeProvider] || 0).toFixed(2)}</span>
+            </div>
+          ) : (
+             <span className={styles.activeValueMini}>$ {(balances[activeProvider] || 0).toFixed(1)}</span>
+          )}
+        </div>
+      </div>
 
       <div className={styles.extensionBox}>
         <div className={styles.extensionHeader}>

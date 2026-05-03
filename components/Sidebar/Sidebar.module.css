@@ -230,3 +230,101 @@
   border-top: 1px solid var(--card-border);
   margin-top: 0;
 }
+
+/* Balance Switcher */
+.balanceSwitcher {
+  margin: 16px;
+  padding: 16px;
+  background: rgba(0, 242, 255, 0.03);
+  border: 1px solid rgba(0, 242, 255, 0.1);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.balanceSwitcher:hover {
+  background: rgba(0, 242, 255, 0.08);
+  border-color: rgba(0, 242, 255, 0.3);
+}
+
+.sidebarCollapsed .balanceSwitcher {
+  margin: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.switcherHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.switcherHeader span {
+  font-size: 0.7rem;
+  color: #71717a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.miniSelect {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 4px;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.switcherMain {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.activeIcon {
+  width: 32px;
+  height: 32px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.activeIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.activeDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.activeLabel {
+  font-size: 0.75rem;
+  color: #71717a;
+}
+
+.activeValue {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+}
+
+.activeValueMini {
+  font-size: 0.7rem;
+  color: var(--primary);
+  font-weight: 700;
+}

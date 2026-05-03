@@ -23,18 +23,21 @@ export default function Dashboard() {
   const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
   const [metrics, setMetrics] = useState(null);
+  const [balances, setBalances] = useState({});
   const [logs, setLogs] = useState([]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const fetchData = async (range, currentFilters = {}) => {
     setLoading(true);
     try {
-      const [metricsData, logsData] = await Promise.all([
+      const [metricsData, logsData, balanceData] = await Promise.all([
         api.getMetrics(range, currentFilters),
-        api.getLogs('all', currentFilters)
+        api.getLogs('all', currentFilters),
+        api.getBalance()
       ]);
       setMetrics(metricsData);
       setLogs(logsData || []);
+      setBalances(balanceData);
     } catch (err) {
       console.error('Erro ao carregar dados:', err);
     } finally {
@@ -51,10 +54,10 @@ export default function Dashboard() {
   };
 
   const aiModels = [
-    { name: 'OpenAI', status: 'Ativo', img: '/images/ai/openai.png' },
-    { name: 'Anthropic', status: 'Standby', img: '/images/ai/claude.png' },
-    { name: 'Google', status: 'Ativo', img: '/images/ai/gemini.png' },
-    { name: 'Groq', status: 'Ativo', img: '/images/ai/groq.png' },
+    { id: 'openai', name: 'OpenAI', img: '/images/ai/openai.png' },
+    { id: 'claude', name: 'Anthropic', img: '/images/ai/claude.png' },
+    { id: 'google', name: 'Google', img: '/images/ai/gemini.png' },
+    { id: 'groq', name: 'Groq', img: '/images/ai/groq.png' },
   ];
 
   return (
@@ -118,8 +121,8 @@ export default function Dashboard() {
                 color="var(--warning)"
               />
               <StatsCard 
-                label="Custo Total (Tokens)" 
-                value={`US$ ${metrics?.totalCost?.toFixed(4) || '0.00'}`} 
+                label="Custo Médio / Prop" 
+                value={`US$ ${metrics?.avgCostPerProposal?.toFixed(4) || '0.00'}`} 
                 icon={CheckCircle2} 
                 trend="down" 
                 trendValue={5} 
@@ -147,29 +150,27 @@ export default function Dashboard() {
             </div>
 
             <div className={styles.aiList}>
-              {aiModels.map((model, idx) => (
-                <div key={idx} className={styles.aiItem}>
-                  <div className={styles.aiIcon} style={{ backgroundColor: '#000', padding: '4px' }}>
-                    {model.img ? (
-                      <img src={model.img} alt={model.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                    ) : (
-                      model.icon
-                    )}
+              {aiModels.map((model) => {
+                const balance = balances[model.id] || 0;
+                const isActive = balance > 0;
+                return (
+                  <div key={model.id} className={styles.aiItem}>
+                    <div className={styles.aiIcon}>
+                      <img src={model.img} alt={model.name} />
+                    </div>
+                    <div className={styles.aiInfo}>
+                      <span className={styles.aiName}>{model.name}</span>
+                      <div className={styles.aiStatusWrapper}>
+                        <span className={`${styles.statusDot} ${isActive ? styles.statusActive : styles.statusInactive}`}></span>
+                        <span className={styles.aiStatusText}>{isActive ? 'Ativo' : 'Sem Saldo'}</span>
+                      </div>
+                    </div>
+                    <div className={styles.aiBalance}>
+                      <span className={styles.balanceVal}>$ {balance.toFixed(2)}</span>
+                    </div>
                   </div>
-                  <div className={styles.aiInfo}>
-                    <span className={styles.aiName}>{model.name}</span>
-                    <span className={styles.aiStatus}>
-                      <span style={{ 
-                        width: 6, 
-                        height: 6, 
-                        borderRadius: '50%', 
-                        backgroundColor: model.status === 'Ativo' ? 'var(--success)' : 'var(--muted)' 
-                      }}></span>
-                      {model.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </aside>
         </div>
