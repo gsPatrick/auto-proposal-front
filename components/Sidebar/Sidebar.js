@@ -128,7 +128,7 @@ export default function Sidebar({ collapsed, onToggle }) {
 
           <div className={styles.extensionBox}>
             <div className={styles.extensionHeader}>
-              <span className={styles.extensionTitle}>Extensão v1.0.3</span>
+              <span className={styles.extensionTitle}>Extensão v1.0.4</span>
               <span className={styles.versionBadge}>Chrome</span>
             </div>
             <a href="/auto-proposal-extension.zip" download className={styles.downloadLink}>
